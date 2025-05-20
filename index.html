@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roof Builder Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* (CSS remains unchanged) */
+    </style>
+</head>
+<body>
+<div class="quiz-container">
+    <h1 class="quiz-title"><i class="fas fa-hard-hat text-yellow-500 mr-2"></i>Roof Builder Quiz</h1>
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+        <div class="progress-text" id="progressText">Progress: 0%</div>
+    </div>
+    <div class="level-indicators">
+        <span class="level-indicator" id="levelApprentice">Apprentice</span>
+        <span class="level-indicator" id="levelSkilled">Skilled Builder</span>
+        <span class="level-indicator" id="levelSupervisor">Site Supervisor</span>
+    </div>
+    <div class="question-area">
+        <p class="question-text" id="questionText"></p>
+    </div>
+    <div class="answer-options" id="answerOptions"></div>
+    <div class="feedback-area" id="feedback"></div>
+    <button class="next-button hidden" id="nextButton">Next Question</button>
+    <button class="next-button hidden" id="restartButton">Restart Quiz</button>
+</div>
+<script>
+    let questions = [];
+    let currentQuestionIndex = 0;
+    let correctCount = 0;
+
+    const questionTextElement = document.getElementById('questionText');
+    const answerOptionsElement = document.getElementById('answerOptions');
+    const feedbackArea = document.getElementById('feedback');
+    const nextButton = document.getElementById('nextButton');
+    const restartButton = document.getElementById('restartButton');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const levelIndicators = document.querySelectorAll('.level-indicator');
+
+    function loadQuestion() {
+        if (currentQuestionIndex < questions.length) {
+            const currentQuestion = questions[currentQuestionIndex];
+            questionTextElement.textContent = currentQuestion.question;
+            answerOptionsElement.innerHTML = '';
+            feedbackArea.textContent = '';
+            nextButton.classList.add('hidden');
+            restartButton.classList.add('hidden');
+
+            currentQuestion.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.classList.add('answer-button');
+                button.textContent = option;
+                button.addEventListener('click', () => handleAnswer(index));
+                answerOptionsElement.appendChild(button);
+            });
+            updateProgress();
+        } else {
+            questionTextElement.textContent = "Quiz Complete!";
+            answerOptionsElement.innerHTML = '';
+            feedbackArea.textContent = `You answered ${correctCount} out of ${questions.length} correctly.`;
+            feedbackArea.className = 'feedback-area feedback-correct';
+            nextButton.classList.add('hidden');
+            restartButton.classList.remove('hidden');
+            updateProgress();
+        }
+    }
+
+    function handleAnswer(selectedIndex) {
+        const currentQuestion = questions[currentQuestionIndex];
+        const answerButtons = document.querySelectorAll('.answer-button');
+        answerButtons.forEach((btn, idx) => {
+            btn.disabled = true;
+            if (idx === currentQuestion.correctAnswerIndex) {
+                btn.style.backgroundColor = '#28a745';
+            }
+        });
+        if (selectedIndex === currentQuestion.correctAnswerIndex) {
+            correctCount++;
+            feedbackArea.textContent = "Correct!";
+            feedbackArea.className = 'feedback-area feedback-correct';
+        } else {
+            feedbackArea.textContent = "Not quite. Keep learning!";
+            feedbackArea.className = 'feedback-area feedback-incorrect';
+            answerButtons[selectedIndex].style.backgroundColor = '#dc3545';
+        }
+        nextButton.classList.remove('hidden');
+    }
+
+    function updateProgress() {
+        const percentage = (currentQuestionIndex / questions.length) * 100;
+        progressBar.style.width = percentage + '%';
+        progressText.textContent = `Progress: ${Math.round(percentage)}%`;
+        levelIndicators.forEach(indicator => indicator.classList.remove('active'));
+        if (percentage < 33) {
+            document.getElementById('levelApprentice').classList.add('active');
+        } else if (percentage < 66) {
+            document.getElementById('levelSkilled').classList.add('active');
+        } else {
+            document.getElementById('levelSupervisor').classList.add('active');
+        }
+    }
+
+    nextButton.addEventListener('click', () => {
+        currentQuestionIndex++;
+        loadQuestion();
+    });
+
+    restartButton.addEventListener('click', () => {
+        currentQuestionIndex = 0;
+        correctCount = 0;
+        loadQuestion();
+    });
+
+    fetch('questions.json')
+        .then(response => response.json())
+        .then(data => {
+            questions = data;
+            loadQuestion();
+        })
+        .catch(error => console.error("Error loading questions:", error));
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+[
+  {
+    "question": "What is the primary function of a roof?",
+    "options": [
+      "To provide a recreational area",
+      "To discharge rainfall away from the building",
+      "To store building materials",
+      "To improve the building's color"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "question": "Which tool is commonly used to fix roofing felt?",
+    "options": [
+      "Nail gun",
+      "Hammer and clout nails",
+      "Saw",
+      "Spirit level"
+    ],
+    "correctAnswerIndex": 1
+  },
+  {
+    "question": "What is used to waterproof a flat roof?",
+    "options": [
+      "Clout nails",
+      "Damp-proof membrane",
+      "Felt and bitumen",
+      "Chipboard"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "question": "Which component forms the ridge of a pitched roof?",
+    "options": [
+      "Purlin",
+      "Ceiling joist",
+      "Ridge board",
+      "Wall plate"
+    ],
+    "correctAnswerIndex": 2
+  },
+  {
+    "question": "What supports the ends of common rafters?",
+    "options": [
+      "Wall plate",
+      "Tie beam",
+      "Valley rafter",
+      "Gutter"
+    ],
+    "correctAnswerIndex": 0
+  }
+]
